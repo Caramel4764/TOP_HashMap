@@ -6,7 +6,7 @@ function HashMap () {
     let hashCode = 0;
    const primeNumber = 31;
    for (let i = 0; i < key.length; i++) {
-     hashCode = (primeNumber * hashCode + key.charCodeAt(i))//%loadFactor;
+     hashCode = (primeNumber * hashCode + key.charCodeAt(i))%loadFactor;
    }
    return hashCode;
   }
@@ -29,10 +29,27 @@ function HashMap () {
     }
   }
   function has(key) {
-    if (map[hash(key)])
-    return false
+    if (map[hash(key)] && map[hash(key)].key == key) {
+      return true;
+    }
+    return false;
   }
-  return {set, get, has}
+  function remove(key) {
+    if (map[hash(key)] && map[hash(key)].key == key) {
+      map[hash(key)] = undefined;
+      return true;
+    }
+    return false;
+  }
+  function length(key) {
+    return map.length
+  }
+  function toString() {
+    for (let i = 0; i<map.length;i++) {
+      console.log(map[i])
+    }
+  }
+  return {set, get, has, remove, length, toString}
 }
 
 export default HashMap;
