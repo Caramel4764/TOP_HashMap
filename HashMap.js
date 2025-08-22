@@ -1,8 +1,8 @@
 import Node from "./Node.js"
 
 function HashMap () {
-  let loadFactor = 16;
-  let capacity = 0.85;
+  let loadFactor = 12;
+  let capacity = 0.95;
   let collision = 0;
   let map = []
   function hash(key) {
@@ -18,23 +18,26 @@ function HashMap () {
     //empty val
     if (!map[hash(key)]) {
       map[hash(key)] = new Node(key, val);
-      console.log((map[hash(key)]))
+      //console.log((map[hash(key)]))
     } else {
       currNode = map[hash(key)];
       if (currNode.key==key) {
         //already existing value/replace
         currNode = new Node(key, val,currNode.nextNode);
-        console.log((currNode))
+        //console.log((currNode))
       }
       while(currNode.nextNode != null) {
         currNode = currNode.nextNode;
         if (currNode.key==key) {
           currNode = new Node(key, val,currNode.nextNode);
-          console.log((currNode))
+          //console.log((currNode))
         }
       }
     }
-
+    if (shouldExpand()) {
+      loadFactor*=2;
+      expand();
+    }
     //collision happened
     if (map[hash(key)] && map[hash(key)].key!=key) {
       collision++;
@@ -45,6 +48,20 @@ function HashMap () {
         currNode = currNode.nextNode
       }
       currNode.nextNode = new Node(key, val);
+    }
+  }
+  function shouldExpand() {
+    if (capacity*loadFactor<length()) {
+      return true;
+    }
+    return false;
+  }
+  function expand() {
+    let entriesList = entries();
+    collision = 0;
+    for (let i = 0; i < entriesList.length; i++) {
+      clear();
+      set(entriesList[i].key, entriesList[i].val);
     }
   }
   function get(key) {
@@ -76,6 +93,9 @@ function HashMap () {
       }
     }
     return false;
+  }
+  function getLoadFactor() {
+    return loadFactor;
   }
   function remove(key) {
     let currNode = map[hash(key)];
@@ -137,7 +157,9 @@ function HashMap () {
     });
     return keyList;
   }
-
+  function getCollision() {
+    return collision;
+  }
   function values() {
     let valList = [];
     let currNode;
@@ -169,7 +191,7 @@ function HashMap () {
     })
     return entryList;
   }
-  return {set, get, has, remove, length, toString, clear, keys, values, entries}
+  return {getCollision, getLoadFactor, set, get, has, remove, length, toString, clear, keys, values, entries}
 }
 
 export default HashMap;
