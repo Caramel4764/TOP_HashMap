@@ -18,19 +18,16 @@ function HashMap () {
     //empty val
     if (!map[hash(key)]) {
       map[hash(key)] = new Node(key, val);
-      //console.log((map[hash(key)]))
     } else {
       currNode = map[hash(key)];
       if (currNode.key==key) {
         //already existing value/replace
         currNode = new Node(key, val,currNode.nextNode);
-        //console.log((currNode))
       }
       while(currNode.nextNode != null) {
         currNode = currNode.nextNode;
         if (currNode.key==key) {
           currNode = new Node(key, val,currNode.nextNode);
-          //console.log((currNode))
         }
       }
     }
@@ -59,8 +56,8 @@ function HashMap () {
   function expand() {
     let entriesList = entries();
     collision = 0;
+    clear();
     for (let i = 0; i < entriesList.length; i++) {
-      clear();
       set(entriesList[i].key, entriesList[i].val);
     }
   }
@@ -70,10 +67,11 @@ function HashMap () {
       //not a valid key
       return null
     }
+    //matching key
     if (currNode.key == key) {
       return currNode.val;
     }
-    while(map[hash(key)].nextNode != null) {
+    while(currNode.nextNode != null) {
       currNode = currNode.nextNode;
       if (currNode.key == key) {
         return currNode.val;
@@ -191,7 +189,10 @@ function HashMap () {
     })
     return entryList;
   }
-  return {getCollision, getLoadFactor, set, get, has, remove, length, toString, clear, keys, values, entries}
+  function getMapArrLength() {
+    return map.length
+  }
+  return {getCollision, getMapArrLength, getLoadFactor, set, get, has, remove, length, toString, clear, keys, values, entries}
 }
 
 export default HashMap;
