@@ -14,11 +14,27 @@ function HashMap () {
    return hashCode;
   }
   function set(key, val) {
-    //no val or not same val
-    if (!map[hash(key)] || map[hash(key)!=val]) {
-       map[hash(key)] = new Node(key, val);
+    let currNode;
+    //empty val
+    if (!map[hash(key)]) {
+      map[hash(key)] = new Node(key, val);
       console.log((map[hash(key)]))
+    } else {
+      currNode = map[hash(key)];
+      if (currNode.key==key) {
+        //already existing value/replace
+        currNode = new Node(key, val,currNode.nextNode);
+        console.log((currNode))
+      }
+      while(currNode.nextNode != null) {
+        currNode = currNode.nextNode;
+        if (currNode.key==key) {
+          currNode = new Node(key, val,currNode.nextNode);
+          console.log((currNode))
+        }
+      }
     }
+
     //collision happened
     if (map[hash(key)] && map[hash(key)].key!=key) {
       collision++;
